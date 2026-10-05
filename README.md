@@ -13,6 +13,8 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
   and `default_app_config` (Django < 3.2) are removed.
 - The South guard in `robots.migrations` is removed.
 - `RuleAdminForm` rejects a rule whose allowed and disallowed URLs share a pattern.
+- `RuleAdminForm` rejects a second rule for the same robot (case-insensitive) on the
+  same site.
 - Only the `ru` locale is shipped.
 
 ## Installation

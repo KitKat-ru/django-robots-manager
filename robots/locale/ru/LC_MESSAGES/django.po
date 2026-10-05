@@ -27,14 +27,19 @@ msgstr "Шаблоны URL"
 msgid "Advanced options"
 msgstr "Расширенные настройки"
 
-#: forms.py:12
+#: forms.py:18
 msgid "Please specify at least one allowed or disallowed URL."
 msgstr "Укажите как минимум один URL-адрес (неважно разрешенный или нет)"
 
-#: forms.py:28
+#: forms.py:29
 #, python-format
 msgid "URL patterns cannot be both allowed and disallowed: %(patterns)s."
 msgstr "Шаблоны URL не могут быть одновременно разрешёнными и запрещёнными: %(patterns)s."
+
+#: forms.py:48
+#, python-format
+msgid "A rule for robot %(robot)s already exists on sites: %(sites)s."
+msgstr "Правило для робота %(robot)s уже существует на сайтах: %(sites)s."
 
 #: models.py:11
 msgid "pattern"
