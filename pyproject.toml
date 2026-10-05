@@ -26,3 +26,11 @@ packages = [{ include = "robots" }]
 [build-system]
 requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+extend-select = ["W", "I", "B", "C4"]
+# Django-generated migrations are kept as generated.
+exclude = ["robots/migrations/*"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["robots"]

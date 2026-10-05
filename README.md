@@ -60,3 +60,12 @@ python -m django makemigrations robots --check --dry-run   # after model changes
 
 The demo project uses `SITE_ID = 1` (`example.com`), so rules must be attached to that
 site to appear in `/robots.txt`.
+
+Linting and formatting use [ruff](https://docs.astral.sh/ruff/) via
+[pre-commit](https://pre-commit.com/); neither is a dependency of the package.
+
+```bash
+pip install pre-commit
+pre-commit install                   # run the hooks on every commit
+pre-commit run --all-files           # run them on the whole repository
+```
