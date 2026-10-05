@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
 from robots.forms import RuleAdminForm
@@ -19,6 +20,9 @@ class RuleAdmin(admin.ModelAdmin):
     list_display = ("robot", "allowed_urls", "disallowed_urls")
     search_fields = ("robot", "allowed__pattern", "disallowed__pattern")
     filter_horizontal = ("sites", "allowed", "disallowed")
+
+    def get_queryset(self, request: HttpRequest):
+        return super().get_queryset(request).prefetch_related("allowed", "disallowed")
 
 
 admin.site.register(Url)
