@@ -59,7 +59,7 @@ export DJANGO_SETTINGS_MODULE=tests.settings
 
 python -m django test tests          # run the test suite
 
-pip install coverage                 # test coverage, as in CI
+pip install "coverage[toml]"         # test coverage, as in CI
 python -m coverage run -m django test tests
 python -m coverage report
 
