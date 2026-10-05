@@ -28,7 +28,7 @@ msgid "Advanced options"
 msgstr "Расширенные настройки"
 
 #: forms.py:12
-msgid "Please specify at least one allowed or dissallowed URL."
+msgid "Please specify at least one allowed or disallowed URL."
 msgstr "Укажите как минимум один URL-адрес (неважно разрешенный или нет)"
 
 #: models.py:11
