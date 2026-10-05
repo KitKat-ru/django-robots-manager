@@ -1,0 +1,28 @@
+[project]
+name = "django-robots-manager"
+version = "6.2.0"
+description = "Robots exclusion application for Django, complementing Sitemaps. Continuation of django-robots 6.x after a long pause in upstream releases."
+readme = "README.md"
+authors = [{ name = "Artem Fabrikov", email = "a.fabrikov1406@yandex.ru" }]
+license = "BSD-3-Clause"
+license-files = ["LICENSE.txt"]
+requires-python = ">=3.8"
+dependencies = ["Django>=3.2"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+
+[project.urls]
+Upstream = "https://github.com/jazzband/django-robots/"
+
+[tool.poetry]
+packages = [{ include = "robots" }]
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
