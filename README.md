@@ -27,6 +27,9 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 
 ## Installation
 
+Requires Python 3.10+ and Django 4.2+ (tested with Django 4.2, 5.2, 6.0 and 6.1).
+Projects on older Python or Django versions can stay on django-robots 6.1.
+
 ```python
 INSTALLED_APPS = [
     "django.contrib.sites",
