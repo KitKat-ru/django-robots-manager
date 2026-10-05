@@ -4,3 +4,5 @@ dist/
 build/
 *.egg-info/
 .venv/
+db.sqlite3
+.vscode

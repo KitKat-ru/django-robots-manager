@@ -11,7 +11,7 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 
 - `__version__` is read via `importlib.metadata` only; the `pkg_resources` fallback
   and `default_app_config` (Django < 3.2) are removed.
-- The South guard in `robots.migrations` and the bundled unittest suite are removed.
+- The South guard in `robots.migrations` is removed.
 - Only the `ru` locale is shipped.
 
 ## Installation
@@ -33,3 +33,27 @@ urlpatterns = [
 Settings (`ROBOTS_SITEMAP_URLS`, `ROBOTS_USE_SITEMAP`, `ROBOTS_USE_HOST`,
 `ROBOTS_CACHE_TIMEOUT`, `ROBOTS_SITE_BY_REQUEST`, `ROBOTS_USE_SCHEME_IN_HOST`,
 `ROBOTS_SITEMAP_VIEW_NAME`) are unchanged from upstream.
+
+## Development
+
+`tests/` holds a minimal Django project (SQLite) used both for the test suite and for
+trying the app locally. It is not part of the distributed package. Run the commands
+from the repository root.
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -e .
+export DJANGO_SETTINGS_MODULE=tests.settings
+
+python -m django test tests          # run the test suite
+
+python -m django migrate
+python -m django createsuperuser
+python -m django runserver           # http://localhost:8000/admin/, http://localhost:8000/robots.txt
+
+python -m django makemigrations robots --check --dry-run   # after model changes
+```
+
+The demo project uses `SITE_ID = 1` (`example.com`), so rules must be attached to that
+site to appear in `/robots.txt`.
