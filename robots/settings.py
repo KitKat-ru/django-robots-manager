@@ -1,8 +1,9 @@
 import sys
+from typing import ClassVar
 
 
 class Settings:
-    defaults = {
+    defaults: ClassVar[dict] = {
         #: A list of one or more sitemaps to inform robots about:
         "SITEMAP_URLS": ("ROBOTS_SITEMAP_URLS", []),
         "USE_SITEMAP": ("ROBOTS_USE_SITEMAP", True),

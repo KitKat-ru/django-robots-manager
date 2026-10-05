@@ -46,10 +46,7 @@ class RuleAdminForm(forms.ModelForm):
             )
             if duplicate_domains:
                 raise forms.ValidationError(
-                    _(
-                        "A rule for robot %(robot)s already exists on sites: "
-                        "%(sites)s."
-                    ),
+                    _("A rule for robot %(robot)s already exists on sites: %(sites)s."),
                     params={
                         "robot": robot,
                         "sites": ", ".join(sorted(duplicate_domains)),

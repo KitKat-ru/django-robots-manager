@@ -1,5 +1,6 @@
 from django.contrib.sitemaps import views as sitemap_views
 from django.contrib.sites.models import Site
+from django.http import HttpRequest
 from django.urls import NoReverseMatch, reverse
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
@@ -18,7 +19,7 @@ class RuleList(ListView):
     context_object_name = "rules"
     cache_timeout = settings.CACHE_TIMEOUT
 
-    def get_current_site(self, request):
+    def get_current_site(self, request: HttpRequest):
         if settings.SITE_BY_REQUEST:
             return Site.objects.get(domain=request.get_host())
         else:
@@ -39,7 +40,7 @@ class RuleList(ListView):
     def get_domain(self):
         scheme = self.request.is_secure() and "https" or "http"
         if not self.current_site.domain.startswith(("http", "https")):
-            return "%s://%s" % (scheme, self.current_site.domain)
+            return f"{scheme}://{self.current_site.domain}"
         return self.current_site.domain
 
     def get_sitemap_urls(self):
@@ -50,7 +51,7 @@ class RuleList(ListView):
 
             if sitemap_url is not None:
                 if not sitemap_url.startswith(("http", "https")):
-                    sitemap_url = "%s%s" % (self.get_domain(), sitemap_url)
+                    sitemap_url = f"{self.get_domain()}{sitemap_url}"
                 if sitemap_url not in sitemap_urls:
                     sitemap_urls.append(sitemap_url)
 
@@ -77,7 +78,7 @@ class RuleList(ListView):
     def get_cache_timeout(self):
         return self.cache_timeout
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
         cache_timeout = self.get_cache_timeout()
         self.current_site = self.get_current_site(request)
         super_dispatch = super().dispatch

@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.text import get_text_list
@@ -28,7 +29,7 @@ class Url(models.Model):
         verbose_name_plural = _("url")
 
     def __str__(self):
-        return "%s" % self.pattern
+        return self.pattern
 
     def save(self, *args, **kwargs):
         if not self.pattern.startswith("/"):
@@ -62,7 +63,7 @@ class Rule(models.Model):
         blank=True,
         related_name="allowed",
         verbose_name=_("allowed"),
-        help_text=_("The URLs which are allowed " "to be accessed by bots."),
+        help_text=_("The URLs which are allowed to be accessed by bots."),
     )
 
     disallowed = models.ManyToManyField(
@@ -70,7 +71,7 @@ class Rule(models.Model):
         blank=True,
         related_name="disallowed",
         verbose_name=_("disallowed"),
-        help_text=_("The URLs which are not " "allowed to be accessed " "by bots."),
+        help_text=_("The URLs which are not allowed to be accessed by bots."),
     )
     sites = models.ManyToManyField(Site, verbose_name=_("sites"))
 
@@ -104,14 +105,12 @@ class Rule(models.Model):
         verbose_name_plural = _("rules")
 
     def __str__(self):
-        return "%s" % self.robot
+        return self.robot
 
+    @admin.display(description=_("allowed"))
     def allowed_urls(self):
         return get_text_list(list(self.allowed.all()), _("and"))
 
-    allowed_urls.short_description = _("allowed")
-
+    @admin.display(description=_("disallowed"))
     def disallowed_urls(self):
         return get_text_list(list(self.disallowed.all()), _("and"))
-
-    disallowed_urls.short_description = _("disallowed")

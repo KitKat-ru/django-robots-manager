@@ -88,8 +88,10 @@ class RuleAdminFormTest(TestCase):
         self.assertEqual(
             form.non_field_errors(),
             [
-                "A rule for robot Googlebot already exists on sites: "
-                "example.com, other.example.com."
+                (
+                    "A rule for robot Googlebot already exists on sites: "
+                    "example.com, other.example.com."
+                )
             ],
         )
 
