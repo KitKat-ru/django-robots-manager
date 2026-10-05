@@ -6,3 +6,5 @@ build/
 .venv/
 db.sqlite3
 .vscode
+htmlcov/
+.coverage

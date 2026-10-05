@@ -34,3 +34,10 @@ exclude = ["robots/migrations/*"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["robots"]
+
+[tool.coverage.run]
+source = ["robots"]
+omit = ["robots/migrations/*"]
+
+[tool.coverage.report]
+show_missing = true
