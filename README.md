@@ -12,6 +12,7 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 - `__version__` is read via `importlib.metadata` only; the `pkg_resources` fallback
   and `default_app_config` (Django < 3.2) are removed.
 - The South guard in `robots.migrations` is removed.
+- `RuleAdminForm` rejects a rule whose allowed and disallowed URLs share a pattern.
 - Only the `ru` locale is shipped.
 
 ## Installation
