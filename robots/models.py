@@ -94,7 +94,11 @@ class Rule(models.Model):
         blank=True,
         related_name="disallowed",
         verbose_name=_("disallowed"),
-        help_text=_("The URLs which are not allowed to be accessed by bots."),
+        help_text=_(
+            "The URLs which are not allowed to be accessed by bots. robots.txt is "
+            "public and only asks well-behaved crawlers to stay away: it does not "
+            "protect content, and listing a URL here makes it visible to everyone."
+        ),
     )
     sites = models.ManyToManyField(Site, verbose_name=_("sites"))
 
