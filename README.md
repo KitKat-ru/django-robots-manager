@@ -23,6 +23,15 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 - `RuleAdminForm` rejects a rule whose allowed and disallowed URLs share a pattern.
 - `RuleAdminForm` rejects a second rule for the same robot (case-insensitive) on the
   same site.
+- `ROBOTS_USE_HOST` now defaults to `False`: Yandex
+  [stopped using](https://webmaster.yandex.ru/blog/301-y-redirekt-polnostyu-zamenil-direktivu-host)
+  the `Host` directive in 2018, and Google
+  [never supported it](https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt)
+  (it is not part of [RFC 9309](https://www.rfc-editor.org/rfc/rfc9309) either). Set it
+  to `True` to keep the old output.
+- `ROBOTS_SITE_BY_REQUEST` looks the site up the same way as Django's sites framework:
+  case-insensitively, retrying without the port (`example.com:8000` matches
+  `example.com`).
 - Only the `ru` locale is shipped.
 
 ## Installation
@@ -46,7 +55,8 @@ urlpatterns = [
 
 Settings (`ROBOTS_SITEMAP_URLS`, `ROBOTS_USE_SITEMAP`, `ROBOTS_USE_HOST`,
 `ROBOTS_CACHE_TIMEOUT`, `ROBOTS_SITE_BY_REQUEST`, `ROBOTS_USE_SCHEME_IN_HOST`,
-`ROBOTS_SITEMAP_VIEW_NAME`) are unchanged from upstream.
+`ROBOTS_SITEMAP_VIEW_NAME`) are the same as upstream, except for the changes listed
+above.
 
 ## Development
 

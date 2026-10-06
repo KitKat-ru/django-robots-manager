@@ -7,7 +7,7 @@ class Settings:
         #: A list of one or more sitemaps to inform robots about:
         "SITEMAP_URLS": ("ROBOTS_SITEMAP_URLS", []),
         "USE_SITEMAP": ("ROBOTS_USE_SITEMAP", True),
-        "USE_HOST": ("ROBOTS_USE_HOST", True),
+        "USE_HOST": ("ROBOTS_USE_HOST", False),
         "CACHE_TIMEOUT": ("ROBOTS_CACHE_TIMEOUT", None),
         "SITE_BY_REQUEST": ("ROBOTS_SITE_BY_REQUEST", False),
         "USE_SCHEME_IN_HOST": ("ROBOTS_USE_SCHEME_IN_HOST", False),
