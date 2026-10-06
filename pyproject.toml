@@ -38,8 +38,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
 extend-select = ["W", "I", "B", "C4"]
-# Django-generated migrations are kept as generated.
-exclude = ["robots/migrations/*"]
+
+[tool.ruff.lint.per-file-ignores]
+# Django generates `dependencies` and `operations` as plain class-level lists.
+"robots/migrations/*" = ["RUF012"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["robots"]
