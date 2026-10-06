@@ -70,6 +70,18 @@ Settings (`ROBOTS_SITEMAP_URLS`, `ROBOTS_USE_SITEMAP`, `ROBOTS_USE_HOST`,
 `ROBOTS_SITEMAP_VIEW_NAME`) are the same as upstream, except for the changes listed
 above.
 
+### Internationalized domains
+
+Store non-ASCII domains in `Site.domain` (and in `ROBOTS_SITEMAP_URLS`) in Punycode,
+e.g. `xn--d1aqf.xn--p1ai` instead of `дом.рф`:
+
+- the domain is written to `Sitemap:` (and `Host:`) as stored, and
+  [Yandex requires](https://yandex.ru/support/webmaster/ru/controlling-robot/robots-txt)
+  Punycode there;
+- with `ROBOTS_SITE_BY_REQUEST = True` the site is looked up by the request `Host`
+  header, which is always Punycode, so a site stored as `дом.рф` is not found and
+  `robots.txt` responds with an error.
+
 ## Clean-param
 
 `Clean-param` tells Yandex which URL parameters do not change the page content, so
@@ -87,6 +99,8 @@ The directive is cross-sectional, so it is rendered once per file, next to `Site
 not inside a `User-agent` group. Following the Yandex rules, parameter names are
 case-sensitive, the path may contain only `A-Za-z0-9.-/*_` (a leading `/` is added
 if missing, as for URL patterns), and the whole line is limited to 500 characters.
+Unlike `Allow`/`Disallow`, the path is not percent-encoded, so pages with Cyrillic
+paths (e.g. `/о-компании/`) can only be covered by a directive without a path.
 
 ## Development
 
