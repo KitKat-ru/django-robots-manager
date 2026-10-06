@@ -1,6 +1,7 @@
 from django.contrib.sitemaps import views as sitemap_views
 from django.contrib.sites.models import Site
 from django.http import HttpRequest
+from django.http.request import split_domain_port
 from django.urls import NoReverseMatch, reverse
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
@@ -21,7 +22,12 @@ class RuleList(ListView):
 
     def get_current_site(self, request: HttpRequest):
         if settings.SITE_BY_REQUEST:
-            return Site.objects.get(domain=request.get_host())
+            host = request.get_host()
+            try:
+                return Site.objects.get(domain__iexact=host)
+            except Site.DoesNotExist:
+                domain, _port = split_domain_port(host)
+                return Site.objects.get(domain__iexact=domain)
         else:
             return Site.objects.get_current()
 

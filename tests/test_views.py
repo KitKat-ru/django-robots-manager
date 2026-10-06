@@ -4,7 +4,7 @@ from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sites.models import Site
 from django.http import SimpleCookie
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, override_settings
 from django.utils.encoding import force_str
 
 from robots.models import Rule, Url
@@ -121,7 +121,7 @@ class ViewTest(TestCase):
         response.render()
         content = force_str(response.content)
         self.assertTrue("Sitemap: https://sub.example.com/sitemap.xml" in content)
-        self.assertTrue("Host: https://sub.example.com" in content)
+        self.assertFalse("Host:" in content)
         stanzas = content.split("\n\n")
         self._test_stanzas(stanzas)
 
@@ -173,3 +173,30 @@ class ViewTest(TestCase):
             response.render()
             content = force_str(response.content)
             self.assertTrue("Sitemap: http://example.com/other/sitemap.xml" in content)
+
+
+@override_settings(ROBOTS_SITE_BY_REQUEST=True, ALLOWED_HOSTS=["*"])
+class SiteByRequestTest(TestCase):
+    def setUp(self):
+        self.site = Site.objects.get(domain="example.com")
+
+    def get_site(self, host):
+        request = RequestFactory().get("/", HTTP_HOST=host)
+        return RuleList().get_current_site(request)
+
+    def test_exact_host(self):
+        self.assertEqual(self.get_site("example.com"), self.site)
+
+    def test_host_with_port_falls_back_to_domain(self):
+        self.assertEqual(self.get_site("example.com:8000"), self.site)
+
+    def test_site_domain_with_port(self):
+        site_with_port = Site.objects.create(domain="localhost:8000")
+        self.assertEqual(self.get_site("localhost:8000"), site_with_port)
+
+    def test_host_is_case_insensitive(self):
+        self.assertEqual(self.get_site("EXAMPLE.com"), self.site)
+
+    def test_unknown_host(self):
+        with self.assertRaises(Site.DoesNotExist):
+            self.get_site("unknown.example.org")
