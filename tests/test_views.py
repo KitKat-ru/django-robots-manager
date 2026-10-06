@@ -241,6 +241,21 @@ class RobotsTxtResponseTest(TestCase):
         ]
         self.assertEqual(positions, sorted(positions))
 
+    def test_single_blank_line_before_sitemap(self):
+        self.create_rule(robot="*", disallowed=["/admin"])
+        content = force_str(self.get_robots_txt().content)
+        self.assertEqual(
+            content,
+            "User-agent: *\nDisallow: /admin\n\n"
+            "Sitemap: http://example.com/sitemap.xml\n\n",
+        )
+
+    @override_settings(ROBOTS_USE_SITEMAP=False)
+    def test_no_trailing_section_without_host_and_sitemap(self):
+        self.create_rule(robot="*", disallowed=["/admin"])
+        content = force_str(self.get_robots_txt().content)
+        self.assertEqual(content, "User-agent: *\nDisallow: /admin\n\n")
+
     def test_comment_is_rendered_above_its_group(self):
         self.create_rule(
             robot="Googlebot", disallowed=["/search"], comment="Search & filters"

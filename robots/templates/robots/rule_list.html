@@ -6,7 +6,7 @@
 {% endfor %}{% if rule.crawl_delay %}Crawl-delay: {% localize off %}{{ rule.crawl_delay|floatformat:'0' }}{% endlocalize %}
 {% endif %}{% endfor %}{% else %}User-agent: *
 Disallow:
-{% endif %}
-{% if host %}Host: {{ host }}{% endif %}
-{% for sitemap_url in sitemap_urls %}Sitemap: {{ sitemap_url }}
-{% endfor %}
+{% endif %}{% if host or sitemap_urls %}
+{% if host %}Host: {{ host }}
+{% endif %}{% for sitemap_url in sitemap_urls %}Sitemap: {{ sitemap_url }}
+{% endfor %}{% endif %}
