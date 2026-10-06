@@ -141,3 +141,11 @@ pip install pre-commit
 pre-commit install                   # run the hooks on every commit
 pre-commit run --all-files           # run them on the whole repository
 ```
+
+### Releasing
+
+1. Bump `version` in `pyproject.toml` and commit.
+2. Tag the commit as `v<version>` and push the tag.
+
+The *Release* workflow checks that the tag matches the version, builds the package and
+publishes it to TestPyPI and then to PyPI via trusted publishing.
