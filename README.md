@@ -32,6 +32,9 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 - `ROBOTS_SITE_BY_REQUEST` looks the site up the same way as Django's sites framework:
   case-insensitively, retrying without the port (`example.com:8000` matches
   `example.com`).
+- `robots.txt` is served as `text/plain; charset=utf-8`
+  ([RFC 9309](https://www.rfc-editor.org/rfc/rfc9309) requires UTF-8), with rules sorted
+  by robot and URLs by pattern, in a fixed number of queries.
 - Only the `ru` locale is shipped.
 
 ## Installation

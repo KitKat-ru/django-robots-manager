@@ -1,5 +1,6 @@
 from django.contrib.sitemaps import views as sitemap_views
 from django.contrib.sites.models import Site
+from django.db.models import Prefetch
 from django.http import HttpRequest
 from django.http.request import split_domain_port
 from django.urls import NoReverseMatch, reverse
@@ -7,7 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 
 from robots import settings
-from robots.models import Rule
+from robots.models import Rule, Url
 
 
 class RuleList(ListView):
@@ -64,7 +65,15 @@ class RuleList(ListView):
         return sitemap_urls
 
     def get_queryset(self):
-        return Rule.objects.filter(sites=self.current_site)
+        urls = Url.objects.order_by("pattern")
+        return (
+            Rule.objects.filter(sites=self.current_site)
+            .order_by("robot")
+            .prefetch_related(
+                Prefetch("allowed", queryset=urls),
+                Prefetch("disallowed", queryset=urls),
+            )
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -79,7 +88,9 @@ class RuleList(ListView):
         return context
 
     def render_to_response(self, context, **kwargs):
-        return super().render_to_response(context, content_type="text/plain", **kwargs)
+        return super().render_to_response(
+            context, content_type="text/plain; charset=utf-8", **kwargs
+        )
 
     def get_cache_timeout(self):
         return self.cache_timeout
