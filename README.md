@@ -44,6 +44,9 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
   the same pattern when checking allowed/disallowed conflicts.
 - [Clean-param](https://yandex.ru/support/webmaster/ru/robot-workings/clean-param)
   directives (Yandex): see below.
+- System checks for `ROBOTS_SITEMAP_URLS`: `robots.E001` if it is a string instead of
+  a list, `robots.W001` for URLs that are not absolute, `robots.W002` for non-ASCII
+  domains.
 - Only the `ru` locale is shipped.
 
 ## Installation
