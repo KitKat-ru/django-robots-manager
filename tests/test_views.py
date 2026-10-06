@@ -241,6 +241,11 @@ class RobotsTxtResponseTest(TestCase):
         ]
         self.assertEqual(positions, sorted(positions))
 
+    def test_non_ascii_patterns_are_percent_encoded(self):
+        self.create_rule(robot="*", disallowed=["/каталог/"])
+        lines = force_str(self.get_robots_txt().content).splitlines()
+        self.assertIn("Disallow: /%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3/", lines)
+
     def test_single_blank_line_before_sitemap(self):
         self.create_rule(robot="*", disallowed=["/admin"])
         content = force_str(self.get_robots_txt().content)

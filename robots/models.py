@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 from django.contrib import admin
 from django.contrib.sites.models import Site
 from django.db import models
@@ -5,6 +7,16 @@ from django.utils.text import get_text_list
 from django.utils.translation import gettext_lazy as _
 
 from robots.validators import validate_single_line
+
+# Printable ASCII except "#", which starts a comment in robots.txt.
+PATTERN_SAFE_CHARS = "".join(
+    chr(code) for code in range(0x21, 0x7F) if chr(code) != "#"
+)
+
+
+def encode_pattern(pattern):
+    """Percent-encode non-ASCII characters, whitespace and "#" for robots.txt."""
+    return quote(pattern, safe=PATTERN_SAFE_CHARS)
 
 
 class Url(models.Model):
@@ -32,6 +44,10 @@ class Url(models.Model):
 
     def __str__(self):
         return self.pattern
+
+    @property
+    def encoded_pattern(self):
+        return encode_pattern(self.pattern)
 
     def save(self, *args, **kwargs):
         if not self.pattern.startswith("/"):

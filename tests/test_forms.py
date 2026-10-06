@@ -77,6 +77,18 @@ class RuleAdminFormTest(TestCase):
             ["URL patterns cannot be both allowed and disallowed: /test."],
         )
 
+    def test_raw_and_encoded_pattern_conflict(self):
+        url_raw = Url.objects.create(pattern="/каталог/")
+        url_encoded = Url.objects.create(
+            pattern="/%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3/"
+        )
+        form = self.get_form(allowed=[url_raw], disallowed=[url_encoded])
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.non_field_errors(),
+            ["URL patterns cannot be both allowed and disallowed: /каталог/."],
+        )
+
     def test_duplicate_url_rows_with_same_pattern(self):
         url_test_copy = Url.objects.create(pattern="test")
         form = self.get_form(allowed=[self.url_test], disallowed=[url_test_copy])

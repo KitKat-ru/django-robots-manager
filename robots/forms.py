@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.sites.models import Site
 from django.utils.translation import gettext_lazy as _
 
-from robots.models import Rule
+from robots.models import Rule, encode_pattern
 
 
 class RuleAdminForm(forms.ModelForm):
@@ -21,16 +21,25 @@ class RuleAdminForm(forms.ModelForm):
         allowed = self.cleaned_data.get("allowed")
         disallowed = self.cleaned_data.get("disallowed")
         if allowed and disallowed:
-            conflicts = set(allowed.values_list("pattern", flat=True)) & set(
-                disallowed.values_list("pattern", flat=True)
-            )
+            allowed_patterns = {
+                encode_pattern(pattern): pattern
+                for pattern in allowed.values_list("pattern", flat=True)
+            }
+            conflicts = allowed_patterns.keys() & {
+                encode_pattern(pattern)
+                for pattern in disallowed.values_list("pattern", flat=True)
+            }
             if conflicts:
                 raise forms.ValidationError(
                     _(
                         "URL patterns cannot be both allowed and disallowed: "
                         "%(patterns)s."
                     ),
-                    params={"patterns": ", ".join(sorted(conflicts))},
+                    params={
+                        "patterns": ", ".join(
+                            sorted(allowed_patterns[key] for key in conflicts)
+                        )
+                    },
                 )
 
         robot = self.cleaned_data.get("robot")

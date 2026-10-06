@@ -37,6 +37,11 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
   by robot and URLs by pattern, in a fixed number of queries.
 - `Rule.comment`: an optional single-line note rendered as a `# ...` line above the
   rule's group in `robots.txt`.
+- URL patterns are percent-encoded on output: non-ASCII characters (e.g. Cyrillic),
+  whitespace and `#` become `%XX`, as
+  [Yandex requires](https://yandex.ru/support/webmaster/ru/controlling-robot/robots-txt).
+  Patterns are stored as entered, and raw and encoded forms of the same path count as
+  the same pattern when checking allowed/disallowed conflicts.
 - Only the `ru` locale is shipped.
 
 ## Installation
