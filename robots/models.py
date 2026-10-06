@@ -2,11 +2,16 @@ from urllib.parse import quote
 
 from django.contrib import admin
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import get_text_list
 from django.utils.translation import gettext_lazy as _
 
-from robots.validators import validate_single_line
+from robots.validators import (
+    validate_clean_param_parameters,
+    validate_clean_param_path,
+    validate_single_line,
+)
 
 # Printable ASCII except "#", which starts a comment in robots.txt.
 PATTERN_SAFE_CHARS = "".join(
@@ -143,3 +148,65 @@ class Rule(models.Model):
     @admin.display(description=_("disallowed"))
     def disallowed_urls(self):
         return get_text_list(list(self.disallowed.all()), _("and"))
+
+
+class CleanParam(models.Model):
+    """
+    Defines a Yandex Clean-param directive: URL parameters that do not change
+    the page content and should be ignored under the given path prefix.
+    """
+
+    MAX_DIRECTIVE_LENGTH = 500
+
+    parameters = models.CharField(
+        _("parameters"),
+        max_length=255,
+        validators=[validate_clean_param_parameters],
+        help_text=_("Parameter names separated by &, e.g. ref&sid. Case-sensitive."),
+    )
+    path = models.CharField(
+        _("path"),
+        max_length=255,
+        blank=True,
+        validators=[validate_clean_param_path],
+        help_text=_(
+            "Optional path prefix, e.g. '/catalog/'. Leave empty to apply to the "
+            "whole site."
+        ),
+    )
+    sites = models.ManyToManyField(Site, verbose_name=_("sites"))
+
+    class Meta:
+        verbose_name = _("Clean-param directive")
+        verbose_name_plural = _("Clean-param directives")
+
+    def __str__(self):
+        return self.directive
+
+    @property
+    def directive(self):
+        if self.path:
+            return f"Clean-param: {self.parameters} {self.path}"
+        return f"Clean-param: {self.parameters}"
+
+    def add_leading_slash(self):
+        """Prefix a non-empty path with "/" unless it starts with "/" or "*"."""
+        if self.path and not self.path.startswith(("/", "*")):
+            self.path = "/" + self.path
+
+    def clean_fields(self, exclude=None):
+        self.add_leading_slash()
+        super().clean_fields(exclude=exclude)
+
+    def clean(self):
+        super().clean()
+        if len(self.directive) > self.MAX_DIRECTIVE_LENGTH:
+            raise ValidationError(
+                _("The Clean-param directive must not exceed %(limit)d characters."),
+                params={"limit": self.MAX_DIRECTIVE_LENGTH},
+                code="max_length",
+            )
+
+    def save(self, *args, **kwargs):
+        self.add_leading_slash()
+        super().save(*args, **kwargs)

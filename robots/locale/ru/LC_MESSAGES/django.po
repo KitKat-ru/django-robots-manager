@@ -131,3 +131,52 @@ msgstr ""
 #: validators.py:18
 msgid "Use a single line without line breaks or control characters."
 msgstr "Используйте одну строку без переносов и управляющих символов."
+
+#: models.py:162
+msgid "parameters"
+msgstr "параметры"
+
+#: models.py:165
+msgid "Parameter names separated by &, e.g. ref&sid. Case-sensitive."
+msgstr "Имена параметров через &, например ref&sid. Регистр учитывается."
+
+#: models.py:168
+msgid "path"
+msgstr "путь"
+
+#: models.py:173
+msgid ""
+"Optional path prefix, e.g. '/catalog/'. Leave empty to apply to the whole "
+"site."
+msgstr ""
+"Необязательный префикс пути, например '/catalog/'. Оставьте пустым, чтобы "
+"директива действовала на весь сайт."
+
+#: models.py:180
+msgid "Clean-param directive"
+msgstr "директива Clean-param"
+
+#: models.py:181
+msgid "Clean-param directives"
+msgstr "директивы Clean-param"
+
+#: models.py:196
+#, python-format
+msgid "The Clean-param directive must not exceed %(limit)d characters."
+msgstr "Директива Clean-param не должна быть длиннее %(limit)d символов."
+
+#: validators.py:33
+msgid ""
+"Enter parameter names separated by \"&\", without spaces, \"=\", \"#\" or "
+"non-ASCII characters."
+msgstr ""
+"Введите имена параметров через «&», без пробелов, «=», «#» и символов вне "
+"ASCII."
+
+#: validators.py:45
+msgid ""
+"The path may contain only Latin letters, digits and the characters \".\", "
+"\"-\", \"/\", \"*\" and \"_\"."
+msgstr ""
+"Путь может содержать только латинские буквы, цифры и символы «.», «-», «/», "
+"«*» и «_»."

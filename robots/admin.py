@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
 from robots.forms import RuleAdminForm
-from robots.models import Rule, Url
+from robots.models import CleanParam, Rule, Url
 
 
 class RuleAdmin(admin.ModelAdmin):
@@ -25,5 +25,12 @@ class RuleAdmin(admin.ModelAdmin):
         return super().get_queryset(request).prefetch_related("allowed", "disallowed")
 
 
+class CleanParamAdmin(admin.ModelAdmin):
+    list_display = ("parameters", "path")
+    list_filter = ("sites",)
+    filter_horizontal = ("sites",)
+
+
 admin.site.register(Url)
 admin.site.register(Rule, RuleAdmin)
+admin.site.register(CleanParam, CleanParamAdmin)

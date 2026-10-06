@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 
 from robots import settings
-from robots.models import Rule, Url
+from robots.models import CleanParam, Rule, Url
 
 
 class RuleList(ListView):
@@ -78,6 +78,9 @@ class RuleList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["sitemap_urls"] = self.get_sitemap_urls()
+        context["clean_params"] = CleanParam.objects.filter(
+            sites=self.current_site
+        ).order_by("path", "parameters")
         if settings.USE_HOST:
             if settings.USE_SCHEME_IN_HOST:
                 context["host"] = self.get_domain()

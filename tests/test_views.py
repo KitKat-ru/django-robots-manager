@@ -9,7 +9,7 @@ from django.test import RequestFactory, TestCase, override_settings
 from django.test.utils import CaptureQueriesContext
 from django.utils.encoding import force_str
 
-from robots.models import Rule, Url
+from robots.models import CleanParam, Rule, Url
 from robots.views import RuleList
 
 
@@ -260,6 +260,30 @@ class RobotsTxtResponseTest(TestCase):
         self.create_rule(robot="*", disallowed=["/admin"])
         content = force_str(self.get_robots_txt().content)
         self.assertEqual(content, "User-agent: *\nDisallow: /admin\n\n")
+
+    def create_clean_param(self, parameters, path="", sites=None):
+        clean_param = CleanParam.objects.create(parameters=parameters, path=path)
+        clean_param.sites.set(sites or [self.site])
+        return clean_param
+
+    def test_clean_params_are_rendered_before_sitemap(self):
+        self.create_rule(robot="*", disallowed=["/admin"])
+        self.create_clean_param(parameters="utm")
+        self.create_clean_param(parameters="ref&sid", path="/catalog/")
+        content = force_str(self.get_robots_txt().content)
+        self.assertEqual(
+            content,
+            "User-agent: *\nDisallow: /admin\n\n"
+            "Clean-param: utm\n"
+            "Clean-param: ref&sid /catalog/\n"
+            "Sitemap: http://example.com/sitemap.xml\n\n",
+        )
+
+    def test_clean_params_of_other_sites_are_not_rendered(self):
+        other_site = Site.objects.create(domain="other.example.com")
+        self.create_clean_param(parameters="ref", sites=[other_site])
+        content = force_str(self.get_robots_txt().content)
+        self.assertNotIn("Clean-param", content)
 
     def test_comment_is_rendered_above_its_group(self):
         self.create_rule(

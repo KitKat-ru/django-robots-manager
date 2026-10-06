@@ -42,6 +42,8 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
   [Yandex requires](https://yandex.ru/support/webmaster/ru/controlling-robot/robots-txt).
   Patterns are stored as entered, and raw and encoded forms of the same path count as
   the same pattern when checking allowed/disallowed conflicts.
+- [Clean-param](https://yandex.ru/support/webmaster/ru/robot-workings/clean-param)
+  directives (Yandex): see below.
 - Only the `ru` locale is shipped.
 
 ## Installation
@@ -67,6 +69,24 @@ Settings (`ROBOTS_SITEMAP_URLS`, `ROBOTS_USE_SITEMAP`, `ROBOTS_USE_HOST`,
 `ROBOTS_CACHE_TIMEOUT`, `ROBOTS_SITE_BY_REQUEST`, `ROBOTS_USE_SCHEME_IN_HOST`,
 `ROBOTS_SITEMAP_VIEW_NAME`) are the same as upstream, except for the changes listed
 above.
+
+## Clean-param
+
+`Clean-param` tells Yandex which URL parameters do not change the page content, so
+`/catalog/?ref=vk` and `/catalog/?sid=1` are crawled and indexed as `/catalog/`. Other
+search engines ignore it.
+
+Add directives in the admin under *Clean-param directives* and attach them to sites:
+
+| Parameters | Path | Output |
+|---|---|---|
+| `ref&sid` | `/catalog/` | `Clean-param: ref&sid /catalog/` |
+| `sort` | *(empty)* | `Clean-param: sort` (whole site) |
+
+The directive is cross-sectional, so it is rendered once per file, next to `Sitemap`,
+not inside a `User-agent` group. Following the Yandex rules, parameter names are
+case-sensitive, the path may contain only `A-Za-z0-9.-/*_` (a leading `/` is added
+if missing, as for URL patterns), and the whole line is limited to 500 characters.
 
 ## Development
 
