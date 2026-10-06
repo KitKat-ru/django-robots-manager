@@ -3,8 +3,10 @@ from io import StringIO
 from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sites.models import Site
+from django.db import connection
 from django.http import SimpleCookie
 from django.test import RequestFactory, TestCase, override_settings
+from django.test.utils import CaptureQueriesContext
 from django.utils.encoding import force_str
 
 from robots.models import Rule, Url
@@ -200,3 +202,66 @@ class SiteByRequestTest(TestCase):
     def test_unknown_host(self):
         with self.assertRaises(Site.DoesNotExist):
             self.get_site("unknown.example.org")
+
+
+class RobotsTxtResponseTest(TestCase):
+    def setUp(self):
+        self.site = Site.objects.get(domain="example.com")
+
+    def create_rule(self, robot, disallowed, comment=""):
+        rule = Rule.objects.create(robot=robot, comment=comment)
+        rule.sites.add(self.site)
+        for pattern in disallowed:
+            rule.disallowed.add(Url.objects.create(pattern=pattern))
+        return rule
+
+    def get_robots_txt(self):
+        response = self.client.get("/robots.txt")
+        self.assertEqual(response.status_code, 200)
+        return response
+
+    def test_content_type_is_utf8_plain_text(self):
+        response = self.get_robots_txt()
+        self.assertEqual(response["Content-Type"], "text/plain; charset=utf-8")
+
+    def test_rules_and_urls_are_sorted(self):
+        self.create_rule(robot="Googlebot", disallowed=["/b", "/a"])
+        self.create_rule(robot="*", disallowed=["/admin"])
+        self.create_rule(robot="Bing", disallowed=["/tmp"])
+        lines = force_str(self.get_robots_txt().content).splitlines()
+        positions = [
+            lines.index(line)
+            for line in [
+                "User-agent: *",
+                "User-agent: Bing",
+                "User-agent: Googlebot",
+                "Disallow: /a",
+                "Disallow: /b",
+            ]
+        ]
+        self.assertEqual(positions, sorted(positions))
+
+    def test_comment_is_rendered_above_its_group(self):
+        self.create_rule(
+            robot="Googlebot", disallowed=["/search"], comment="Search & filters"
+        )
+        lines = force_str(self.get_robots_txt().content).splitlines()
+        index = lines.index("User-agent: Googlebot")
+        self.assertEqual(lines[index - 1], "# Search & filters")
+
+    def test_rule_without_comment_has_no_comment_line(self):
+        self.create_rule(robot="Googlebot", disallowed=["/search"])
+        lines = force_str(self.get_robots_txt().content).splitlines()
+        self.assertFalse(any(line.startswith("#") for line in lines))
+
+    def test_query_count_does_not_depend_on_rule_count(self):
+        self.create_rule(robot="*", disallowed=["/admin"])
+        # Warm up SITE_CACHE so the Site query does not land in the first sample only.
+        self.get_robots_txt()
+        with CaptureQueriesContext(connection) as one_rule:
+            self.get_robots_txt()
+        self.create_rule(robot="Bing", disallowed=["/tmp", "/media"])
+        self.create_rule(robot="Googlebot", disallowed=["/search"])
+        with CaptureQueriesContext(connection) as three_rules:
+            self.get_robots_txt()
+        self.assertEqual(len(three_rules), len(one_rule))

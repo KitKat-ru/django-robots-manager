@@ -11,10 +11,13 @@ class RuleAdminFormTest(TestCase):
         self.url_test = Url.objects.create(pattern="/test")
         self.url_admin = Url.objects.create(pattern="/admin")
 
-    def get_form(self, allowed, disallowed, robot="*", sites=None, instance=None):
+    def get_form(
+        self, allowed, disallowed, robot="*", sites=None, instance=None, comment=""
+    ):
         return RuleAdminForm(
             data={
                 "robot": robot,
+                "comment": comment,
                 "sites": [site.pk for site in sites or [self.site]],
                 "allowed": [url.pk for url in allowed],
                 "disallowed": [url.pk for url in disallowed],
@@ -47,6 +50,22 @@ class RuleAdminFormTest(TestCase):
             instance=rule,
         )
         self.assertTrue(form.is_valid(), form.errors)
+
+    def test_comment_is_valid(self):
+        form = self.get_form(
+            allowed=[self.url_test], disallowed=[], comment="Close search duplicates"
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_multiline_comment(self):
+        form = self.get_form(
+            allowed=[self.url_test], disallowed=[], comment="note\nDisallow: /"
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["comment"],
+            ["Use a single line without line breaks or control characters."],
+        )
 
     def test_same_url_in_allowed_and_disallowed(self):
         form = self.get_form(

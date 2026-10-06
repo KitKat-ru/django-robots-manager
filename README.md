@@ -35,6 +35,8 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 - `robots.txt` is served as `text/plain; charset=utf-8`
   ([RFC 9309](https://www.rfc-editor.org/rfc/rfc9309) requires UTF-8), with rules sorted
   by robot and URLs by pattern, in a fixed number of queries.
+- `Rule.comment`: an optional single-line note rendered as a `# ...` line above the
+  rule's group in `robots.txt`.
 - Only the `ru` locale is shipped.
 
 ## Installation

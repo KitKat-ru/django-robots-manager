@@ -1,4 +1,5 @@
 {% load l10n %}{% if rules %}{% for rule in rules %}{% ifchanged rule.robot %}{% if not forloop.first %}
+{% endif %}{% if rule.comment %}# {{ rule.comment|safe }}
 {% endif %}User-agent: {{ rule.robot }}{% endifchanged %}
 {% for url in rule.allowed.all %}Allow: {{ url.pattern|safe }}
 {% endfor %}{% for url in rule.disallowed.all %}Disallow: {{ url.pattern|safe }}

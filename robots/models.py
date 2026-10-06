@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.text import get_text_list
 from django.utils.translation import gettext_lazy as _
 
+from robots.validators import validate_single_line
+
 
 class Url(models.Model):
     """
@@ -97,6 +99,17 @@ class Rule(models.Model):
             "successive crawl accesses and "
             "decrease the maximum crawl rate to "
             "your web server."
+        ),
+    )
+
+    comment = models.CharField(
+        _("comment"),
+        max_length=255,
+        blank=True,
+        validators=[validate_single_line],
+        help_text=_(
+            "Optional note shown as a '# ...' line above this rule in robots.txt. "
+            "robots.txt is public: do not put anything confidential here."
         ),
     )
 

@@ -114,3 +114,20 @@ msgstr "правила индексации"
 #: models.py:82 models.py:86
 msgid "and"
 msgstr "и"
+
+#: models.py:106
+msgid "comment"
+msgstr "комментарий"
+
+#: models.py:111
+msgid ""
+"Optional note shown as a '# ...' line above this rule in robots.txt. "
+"robots.txt is public: do not put anything confidential here."
+msgstr ""
+"Необязательная заметка, которая выводится строкой «# ...» перед правилом в "
+"robots.txt. Файл robots.txt публичный: не пишите сюда ничего "
+"конфиденциального."
+
+#: validators.py:18
+msgid "Use a single line without line breaks or control characters."
+msgstr "Используйте одну строку без переносов и управляющих символов."

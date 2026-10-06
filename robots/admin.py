@@ -9,7 +9,7 @@ from robots.models import Rule, Url
 class RuleAdmin(admin.ModelAdmin):
     form = RuleAdminForm
     fieldsets = (
-        (None, {"fields": ("robot", "sites")}),
+        (None, {"fields": ("robot", "sites", "comment")}),
         (_("URL patterns"), {"fields": ("allowed", "disallowed")}),
         (
             _("Advanced options"),
