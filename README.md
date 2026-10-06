@@ -4,7 +4,7 @@
 [![GitHub tag](https://img.shields.io/github/v/tag/KitKat-ru/django-robots-manager?sort=semver)](https://github.com/KitKat-ru/django-robots-manager/tags)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue)](https://github.com/KitKat-ru/django-robots-manager/actions/workflows/tests.yml)
 [![Django](https://img.shields.io/badge/django-4.2%20%7C%205.2%20%7C%206.0%20%7C%206.1-0C4B33)](https://github.com/KitKat-ru/django-robots-manager/actions/workflows/tests.yml)
-[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue)](LICENSE.txt)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue)](https://github.com/KitKat-ru/django-robots-manager/blob/main/LICENSE.txt)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
