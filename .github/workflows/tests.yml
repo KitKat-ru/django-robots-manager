@@ -21,13 +21,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # All supported pairs for the Python and Django series declared by the package.
         include:
-          - { python: "3.11", django: "4.2" }
+          - { python: "3.10", django: "4.2" }
+          - { python: "3.10", django: "5.0" }
+          - { python: "3.10", django: "5.1" }
           - { python: "3.10", django: "5.2" }
-          - { python: "3.13", django: "5.2" }
+          - { python: "3.11", django: "4.2" }
+          - { python: "3.11", django: "5.0" }
+          - { python: "3.11", django: "5.1" }
+          - { python: "3.11", django: "5.2" }
+          - { python: "3.12", django: "4.2" }
+          - { python: "3.12", django: "5.0" }
+          - { python: "3.12", django: "5.1" }
+          - { python: "3.12", django: "5.2" }
           - { python: "3.12", django: "6.0" }
           - { python: "3.12", django: "6.1" }
+          - { python: "3.13", django: "5.1" }
+          - { python: "3.13", django: "5.2" }
+          - { python: "3.13", django: "6.0" }
+          - { python: "3.13", django: "6.1" }
+          - { python: "3.14", django: "5.2" }
+          - { python: "3.14", django: "6.0" }
           - { python: "3.14", django: "6.1" }
+          - { python: "3.15", django: "6.1" }
     name: Python ${{ matrix.python }} / Django ${{ matrix.django }}
     env:
       DJANGO_SETTINGS_MODULE: tests.settings

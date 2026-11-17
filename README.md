@@ -52,7 +52,20 @@ django-robots 5.0 and 6.x: existing tables and migration history are reused.
 
 ## Installation
 
-Requires Python 3.10+ and Django 4.2+ (tested with Django 4.2, 5.2, 6.0 and 6.1).
+Requires Python 3.10+ and Django 4.2+. CI is configured to check all 22 officially
+supported combinations of the declared Python and Django series, using the latest
+available patch release of each Django series. The pairs follow
+[Django's compatibility table](https://docs.djangoproject.com/en/stable/faq/install/#what-python-version-can-i-use-with-django).
+
+| Python | Django series |
+| --- | --- |
+| 3.10 | 4.2, 5.0, 5.1, 5.2 |
+| 3.11 | 4.2, 5.0, 5.1, 5.2 |
+| 3.12 | 4.2, 5.0, 5.1, 5.2, 6.0, 6.1 |
+| 3.13 | 5.1, 5.2, 6.0, 6.1 |
+| 3.14 | 5.2, 6.0, 6.1 |
+| 3.15 | 6.1 |
+
 Projects on older Python or Django versions can stay on django-robots 6.1.
 
 ```python
