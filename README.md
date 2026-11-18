@@ -9,6 +9,9 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
+A Django app for managing `robots.txt` through the Django admin, with support for
+multiple sites and Yandex `Clean-param` directives.
+
 A continuation of [django-robots](https://github.com/jazzband/django-robots/),
 picking up from the 6.x series (based on release 6.1), after a long pause in releases
 of the original library.
